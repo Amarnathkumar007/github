@@ -1,0 +1,10 @@
+# compile and run all note all contains name of each part that we want to run
+all: main clean
+# compile and run partwise 
+main:
+	g++ -o mygit main.cpp -lpthread -lssl -lcrypto -lz 
+# code for cleaning stuffs
+# note main is variable name to run use command make main
+clean:
+	rm mygit
+
