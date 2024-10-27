@@ -1,9 +1,13 @@
+#ifndef UTILITIES
+#define UTILITIES
+
 #include <iostream>
 #include <string>
 #include <cstring> // For memset
 #include <zlib.h>  // zlib header
 using namespace std;
 // Compress a string using zlib
+
 string compressString(const string &str, int compressionLevel = Z_BEST_COMPRESSION)
 {
     z_stream zs;
@@ -84,3 +88,5 @@ string decompressString(const string &compressedString)
 
     return outstring;
 }
+
+#endif

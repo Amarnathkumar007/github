@@ -6,5 +6,6 @@ main:
 # code for cleaning stuffs
 # note main is variable name to run use command make main
 clean:
-	rm mygit
+	rm -f mygit
+	rm -f -r .init
 

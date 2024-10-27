@@ -1,3 +1,7 @@
+#ifndef INIT
+#define INIT
+
+
 #include <bits/stdc++.h>
 #include <iostream>
 #include <sys/stat.h> //for mkdir
@@ -15,4 +19,6 @@ bool init()
         return false;
     else
         return true;
-}   
+}
+
+#endif

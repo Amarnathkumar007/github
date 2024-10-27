@@ -5,6 +5,8 @@
 // including files
 #include "init.cpp"
 #include "hash_command.cpp"
+#include "tree_obj.cpp"
+#include "cat_comand.cpp"
 
 using namespace std;
 
@@ -57,7 +59,7 @@ void menu(int argc, char const *argv[])
     // ./mygit hash-object [-w] test.txt
     // ./mygit hash-object test.txt
 
-    // ./ mygit cat-file <flag> <file_sha>
+    // ./mygit cat-file <flag> <file_sha>
     // ./ mygit write - tree
     // ./ mygit ls - tree[--name-only]<tree_sha>
 
@@ -101,33 +103,84 @@ void menu(int argc, char const *argv[])
             cout << hash << endl;
             // process file
             cout << "processing flag" << endl;
-            //save to hash along with compressed version of file
+            // save to hash along with compressed version of file
 
-            save_object(hash,argv[3]); //sending hash and file name 
-
+            save_blob_object(hash, argv[3]); // sending hash and file name
         }
-        else if (strcmp(argv[1], "cat-file"))
+        else if (strcmp(argv[1], "cat-file") == 0)
         {
             cout << "cat-file" << endl;
             if (argc != 4)
             {
-                // flag not included
-                cout << "flag not included";
-                return;
+                // flag not
+                throw string("Main->Cat-file: Flag not included in cat-file command");
+                // cout << "flag not included";
+                // return;
             }
-            cout << "cat-file operation";
+            cout << "cat-file operation" << endl;
+
+            if (strcmp(argv[2], "-p") == 0)
+            {
+                cout << "-p flag" << endl;
+                // string hash = argv[3];
+                string content = get_content(argv[3]); // sending hash
+                cout << "Here is content:\n"
+                     << content << endl;
+            }
+            else if (strcmp(argv[2],"-s")==0)
+            {
+                cout << "file size in byte" << endl;
+            }
+            else if (strcmp(argv[2], "-t") == 0)
+            {
+                cout << "showing type of content" << endl;
+            }
         }
-        else if (strcmp(argv[1], "write-tree"))
+        else if (strcmp(argv[1], "write-tree") == 0)
         {
-            cout << "write-tree" << endl;
             if (argc != 2)
             {
-                cout << "wrong number of argument";
+                cout << "Main: wrong number of argument";
                 return;
             }
-            cout << "write-tree operation";
+            cout << "Main: write-tree operation";
+
+            vector<pair<string, pair<int, int>>> v_files; // file name and level and size
+            cout << "Main: print content of file";
+
+            char current_path[buffer_size];
+            getcwd(current_path, buffer_size);
+            cout << "path " << current_path << endl;
+            create_tree_vector(current_path, 0, v_files); // get details of all files
+
+            // make string to write in tee object
+            string content, tree_object_hash;
+
+            for (auto i : v_files)
+            {
+                // get hash and save to blob
+                // cout << i.first << " " << i.second.first << " " << i.second.second << endl;
+                string file_content = file_to_string(i.first);
+                string file_hash = hash_string(file_content);
+                if (!save_blob_object(file_hash, i.first))
+                    throw string("write-tree: error in saving object to file");
+
+                content += "blob"; //<type>
+                content += "/0";
+                content += file_hash; //<hash>
+                content += "/0";
+                content += get_file_name(i.first, i.second.first); //<name,level>
+                content += "/0";
+                content += to_string(i.second.second); //<size>
+                content += "\n";
+            }
+            // make hash of content
+            tree_object_hash = hash_string(content); // hash of content
+            // writing tree object
+            write_tree_object(tree_object_hash, content); // file name,hash,level,size_of_file
+            cout << tree_object_hash << endl;
         }
-        else if (strcmp(argv[1], "add"))
+        else if (strcmp(argv[1], "add") == 0)
         {
             cout << "add operation";
             if (argc == 3)
@@ -144,7 +197,7 @@ void menu(int argc, char const *argv[])
                 }
             }
         }
-        else if (strcmp(argv[1], "commit"))
+        else if (strcmp(argv[1], "commit") == 0)
         {
             cout << "commit operation";
             if (argc == 2)
@@ -156,7 +209,7 @@ void menu(int argc, char const *argv[])
                 cout << "commit with message" << endl;
             }
         }
-        else if (strcmp(argv[1], "log"))
+        else if (strcmp(argv[1], "log") == 0)
         {
             cout << "log operation";
         }

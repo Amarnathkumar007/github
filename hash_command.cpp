@@ -1,3 +1,7 @@
+#ifndef HASH_COMMAND
+
+#define HASH_COMMAND
+
 #include <bits/stdc++.h>
 #include <openssl/sha.h>
 #include <iostream>
@@ -7,8 +11,18 @@
 
 // own folders
 #include "utilities.cpp"
+
+
+
 using namespace std;
 
+
+/**
+ * @brief Give string it will return hash of string in hexadecimal
+ * 
+ * @param str 
+ * @return string 
+ */
 string hash_string(const string &str)
 {
     const unsigned char *unsigned_str = reinterpret_cast<const unsigned char *>(str.c_str());
@@ -28,14 +42,21 @@ string hash_string(const string &str)
 
     return hash_string; // Return the resulting hash as a hex string
 }
-string file_to_string(string file_name)
+
+/**
+ * @brief give the name of file it willl return content of file
+ * 
+ * @param file_name 
+ * @return string 
+ */
+string file_to_string(string file_path)
 {
     string actual_string = "";
-    ifstream file(file_name);
+    ifstream file(file_path);
 
     if (!file)
     {
-        std::cerr << "Error opening file: " << file_name << std::endl;
+        std::cerr << "Error opening file: " << file_path << std::endl;
         return "";
     }
 
@@ -43,15 +64,16 @@ string file_to_string(string file_name)
     contentStream << file.rdbuf(); // Read the entire file buffer into the stream
     return contentStream.str();
 }
-// string hash_command(string file_name){
-//     //basically we have assumption that our file will be small
-//     //read the string from file
 
-//     // call hash function
-//     return hash_string(file_to_string(file_name));
-
-// }
-bool save_object(string &hash, string file_name)
+/**
+ * @brief give hash and file name it create subdirectory and save content in the remainign part of hash
+ * 
+ * @param hash 
+ * @param file_name 
+ * @return true 
+ * @return false 
+ */
+bool save_blob_object(string &hash, string file_path)
 {
     // making file with first 2 char and saving to .init/object file
     string dir_name = ".init/objects/";
@@ -68,7 +90,7 @@ bool save_object(string &hash, string file_name)
     }
     // get compressed version
 
-    string file_content = file_to_string(file_name);
+    string file_content = file_to_string(file_path);
 
     file_content = compressString(file_content.c_str());
     // save file with name as compressed_file_name
@@ -76,3 +98,5 @@ bool save_object(string &hash, string file_name)
     file << file_content;
     return true;
 };
+
+#endif
