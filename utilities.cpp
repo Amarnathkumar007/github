@@ -47,7 +47,12 @@ string compressString(const string &str, int compressionLevel = Z_BEST_COMPRESSI
 
     return outstring;
 }
-
+/**
+ * @brief Problem in decompression
+ *
+ * @param compressedString
+ * @return string
+ */
 // Decompress a string using zlib
 string decompressString(const string &compressedString)
 {

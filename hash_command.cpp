@@ -12,16 +12,13 @@
 // own folders
 #include "utilities.cpp"
 
-
-
 using namespace std;
-
 
 /**
  * @brief Give string it will return hash of string in hexadecimal
- * 
- * @param str 
- * @return string 
+ *
+ * @param str
+ * @return string
  */
 string hash_string(const string &str)
 {
@@ -45,9 +42,9 @@ string hash_string(const string &str)
 
 /**
  * @brief give the name of file it willl return content of file
- * 
- * @param file_name 
- * @return string 
+ *
+ * @param file_name
+ * @return string
  */
 string file_to_string(string file_path)
 {
@@ -55,10 +52,7 @@ string file_to_string(string file_path)
     ifstream file(file_path);
 
     if (!file)
-    {
-        std::cerr << "Error opening file: " << file_path << std::endl;
-        return "";
-    }
+        throw string("hash_command: Error in opening file");
 
     ostringstream contentStream;
     contentStream << file.rdbuf(); // Read the entire file buffer into the stream
@@ -67,11 +61,11 @@ string file_to_string(string file_path)
 
 /**
  * @brief give hash and file name it create subdirectory and save content in the remainign part of hash
- * 
- * @param hash 
- * @param file_name 
- * @return true 
- * @return false 
+ *
+ * @param hash
+ * @param file_name
+ * @return true
+ * @return false
  */
 bool save_blob_object(string &hash, string file_path)
 {
@@ -94,7 +88,7 @@ bool save_blob_object(string &hash, string file_path)
 
     file_content = compressString(file_content.c_str());
     // save file with name as compressed_file_name
-    std::ofstream file(compressed_file_name); //makes file
+    std::ofstream file(compressed_file_name); // makes file
     file << file_content;
     return true;
 };

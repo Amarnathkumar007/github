@@ -6,7 +6,8 @@
 #include "init.cpp"
 #include "hash_command.cpp"
 #include "tree_obj.cpp"
-#include "cat_comand.cpp"
+#include "cat_command.cpp"
+#include "ls_tree.cpp"
 
 using namespace std;
 
@@ -60,8 +61,8 @@ void menu(int argc, char const *argv[])
     // ./mygit hash-object test.txt
 
     // ./mygit cat-file <flag> <file_sha>
-    // ./ mygit write - tree
-    // ./ mygit ls - tree[--name-only]<tree_sha>
+    // ./mygit write - tree
+    // ./mygit ls-tree [--name-only] <tree_sha>
 
     // ./mygit add .
     // ./mygit add main.cpp utils.cpp
@@ -123,17 +124,37 @@ void menu(int argc, char const *argv[])
             {
                 cout << "-p flag" << endl;
                 // string hash = argv[3];
-                string content = get_content(argv[3]); // sending hash
+                string content = file_to_string(get_path_from_hash(argv[3])); // sending hash
                 cout << "Here is content:\n"
                      << content << endl;
             }
-            else if (strcmp(argv[2],"-s")==0)
+            else if (strcmp(argv[2], "-s") == 0)
             {
                 cout << "file size in byte" << endl;
+                string content = content_type(argv[3]);
+                // if blob object
+                if (strcmp(content.c_str(), "blob") == 0)
+                {
+                    // means tree
+                    //  uncompress it return the size of string
+                    string blob_content = file_to_string(get_path_from_hash(argv[3]));
+                    // uncompress it
+                    cout << "content of file: " << blob_content << endl;
+                    cout << "file size: " << decompressString(blob_content).size();
+                }
+                // if tree object
+                else if (strcmp(content.c_str(), "tree") == 0)
+                {
+                    string tree_content = file_to_string(get_path_from_hash(argv[3]));
+                    cout << "file size: " << tree_content.size();
+                }
+                // return the size of file
             }
             else if (strcmp(argv[2], "-t") == 0)
             {
                 cout << "showing type of content" << endl;
+                string content = content_type(argv[3]); // sending hash
+                cout << "object type is: " << content << endl;
             }
         }
         else if (strcmp(argv[1], "write-tree") == 0)
@@ -179,6 +200,30 @@ void menu(int argc, char const *argv[])
             // writing tree object
             write_tree_object(tree_object_hash, content); // file name,hash,level,size_of_file
             cout << tree_object_hash << endl;
+        }
+        else if (strcmp(argv[1], "ls-tree") == 0)
+        {
+            // check if hash is tree or not
+
+            if (argc == 3)
+            {
+                // no flag
+                if (!is_hash(argv[2]))
+                    throw string("ls-tree: hash is not valid");
+
+                string content = get_content_without_flag(argv[2]);
+                cout << content << endl;
+            }
+            else if (argc == 4)
+            {
+                // flag included
+                if (!is_hash(argv[3]))
+                    throw string("ls-tree: hash is not valid");
+
+                string content = get_content_with_flag(argv[3]);
+                cout << "here is file name: \n"
+                     << content << endl;
+            }
         }
         else if (strcmp(argv[1], "add") == 0)
         {
