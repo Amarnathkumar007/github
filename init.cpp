@@ -1,7 +1,6 @@
 #ifndef INIT
 #define INIT
 
-
 #include <bits/stdc++.h>
 #include <iostream>
 #include <sys/stat.h> //for mkdir
@@ -18,7 +17,10 @@ bool init()
         (!filesystem::exists(".init/refs")) && mkdir(".init/refs", 0777) == -1)
         return false;
     else
+    {
+        std::ofstream file(".init/index.txt"); // makes file
         return true;
+    }
 }
 
 #endif

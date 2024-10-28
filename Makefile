@@ -9,3 +9,6 @@ clean:
 	rm -f mygit
 	rm -f -r .init
 
+#./mygit add .
+#./mygit add file1 file2
+#./mygit ls-tree <hash>

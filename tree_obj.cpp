@@ -25,7 +25,7 @@ namespace fs = std::filesystem;
 const int buffer_size = 1024;
 
 /**
- * @brief This function create vector of file name with level of file
+ * @brief This function create vector of file name with level of file and size of file
  *
  * @param folder_name
  * @param level
@@ -91,7 +91,7 @@ string get_file_name(string file_path,int level=0,int file_size=0){
 }
 
 /**
- * @brief This function gonna write while object at ones appening element will cause problem if new structure comes with same hash
+ * @brief This function gonna write while object at ones appening element 
  * 
  * @param file_path 
  * @param hash 

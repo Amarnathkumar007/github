@@ -8,6 +8,7 @@
 #include "tree_obj.cpp"
 #include "cat_command.cpp"
 #include "ls_tree.cpp"
+#include "add_command.cpp"
 
 using namespace std;
 
@@ -227,18 +228,78 @@ void menu(int argc, char const *argv[])
         }
         else if (strcmp(argv[1], "add") == 0)
         {
-            cout << "add operation";
-            if (argc == 3)
+            // make object tree
+
+            // add to index folder
+
+            cout << "add operation\n";
+            if (argc == 2)
+                throw string("wrong parameters");
+
+            if (strcmp(argv[2], ".") == 0)
             {
-                cout << ". operation ";
+                cout << ". operation\n";
+
+                vector<pair<string, pair<int, int>>> v_files; // file name and level and size
+
+                char current_path[buffer_size];
+                getcwd(current_path, buffer_size);
+                cout << "path " << current_path << endl;
+                create_tree_vector(current_path, 0, v_files); // get details of all files
+
+                // make string to write in tee object
+                string content, tree_object_hash;
+
+                for (auto i : v_files)
+                {
+                    // get hash and save to blob
+                    // cout << i.first << " " << i.second.first << " " << i.second.second << endl;
+                    string file_content = file_to_string(i.first);
+                    string file_hash = hash_string(file_content);
+                    if (!save_blob_object(file_hash, i.first))
+                        throw string("write-tree: error in saving object to file");
+
+                    content += "blob"; //<type>
+                    content += "/0";
+                    content += file_hash; //<hash>
+                    content += "/0";
+                    content += get_file_name(i.first, i.second.first); //<name,level>
+                    content += "/0";
+                    content += to_string(i.second.second); //<size>
+                    content += "\n";
+                }
+                // make hash of content
+                tree_object_hash = hash_string(content); // hash of content
+
+                // cout << tree_object_hash << " \n" << content << endl; //hash and content 
+
+                write_tree_object(tree_object_hash, content); // file name,hash,level,size_of_file
+                
+                //got tree object hash now save to index 
+                // cout << tree_object_hash << endl;
+                save_to_index(tree_object_hash);
+
             }
             else
             {
                 cout << "include these files" << endl;
+                bool status = true;
+                if (!check_if_hash_exist())
+                    status = false;
+
+                char current_path[buffer_size];
+                getcwd(current_path, buffer_size);
 
                 for (int i = 2; i < argc; i++)
                 {
-                    cout << argv[i] << endl;
+                    if(!status)
+                    {
+                        save_file_to_tree_when_empty(argv[i],current_path); //here we need to make tree
+                        status = true;
+                        continue;
+                    }
+                    // cout << argv[i] << endl;
+                    save_file_to_tree_when_not_empty(argv[i],current_path);
                 }
             }
         }
