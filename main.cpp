@@ -9,6 +9,8 @@
 #include "cat_command.cpp"
 #include "ls_tree.cpp"
 #include "add_command.cpp"
+#include "commit_command.cpp"
+#include "log_command.cpp"
 
 using namespace std;
 
@@ -271,14 +273,13 @@ void menu(int argc, char const *argv[])
                 // make hash of content
                 tree_object_hash = hash_string(content); // hash of content
 
-                // cout << tree_object_hash << " \n" << content << endl; //hash and content 
+                // cout << tree_object_hash << " \n" << content << endl; //hash and content
 
                 write_tree_object(tree_object_hash, content); // file name,hash,level,size_of_file
-                
-                //got tree object hash now save to index 
-                // cout << tree_object_hash << endl;
-                save_to_index(tree_object_hash);
 
+                // got tree object hash now save to index
+                //  cout << tree_object_hash << endl;
+                save_to_index(tree_object_hash);
             }
             else
             {
@@ -292,32 +293,39 @@ void menu(int argc, char const *argv[])
 
                 for (int i = 2; i < argc; i++)
                 {
-                    if(!status)
+                    if (!status)
                     {
-                        save_file_to_tree_when_empty(argv[i],current_path); //here we need to make tree
+                        save_file_to_tree_when_empty(argv[i], current_path); // here we need to make tree
                         status = true;
                         continue;
                     }
                     // cout << argv[i] << endl;
-                    save_file_to_tree_when_not_empty(argv[i],current_path);
+                    save_file_to_tree_when_not_empty(argv[i], current_path);
                 }
             }
         }
         else if (strcmp(argv[1], "commit") == 0)
         {
-            cout << "commit operation";
-            if (argc == 2)
-            {
-                cout << "commit without message" << endl;
-            }
-            else
+            cout << "commit operation\n";
+
+            string commit_message = "None"; // defualt message
+            if (argc == 4)
             {
                 cout << "commit with message" << endl;
+                commit_message = argv[3];
             }
+
+            commit_operation(commit_message);
         }
         else if (strcmp(argv[1], "log") == 0)
         {
             cout << "log operation";
+            log_operation();
+        }
+        else if (strcmp(argv[1], "checkout") == 0)
+        {
+            cout << "checkout" << endl;
+            
         }
         else
         {

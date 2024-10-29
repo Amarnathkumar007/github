@@ -41,25 +41,6 @@ string hash_string(const string &str)
 }
 
 /**
- * @brief give the name of file it willl return content of file
- *
- * @param file_name
- * @return string
- */
-string file_to_string(string file_path)
-{
-    string actual_string = "";
-    ifstream file(file_path);
-
-    if (!file)
-        throw string("hash_command: Error in opening file");
-
-    ostringstream contentStream;
-    contentStream << file.rdbuf(); // Read the entire file buffer into the stream
-    return contentStream.str();
-}
-
-/**
  * @brief give hash and file name it create subdirectory and save content in the remainign part of hash
  *
  * @param hash

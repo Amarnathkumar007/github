@@ -18,7 +18,7 @@ void save_to_index(string hash)
     string file_name = ".init/index.txt";
 
     if (!std::filesystem::exists(file_name))
-        throw string("add_command->save_to_file: Error in locating file");
+        throw string("add_command->save_to_index: Error in locating file");
 
     std::ofstream file(file_name); // makes file
     file << hash;
@@ -38,15 +38,6 @@ bool check_if_hash_exist()
 
     cout << "status is true";
     return true;
-}
-
-void write_to_file(string file_name,string hash_content){
-
-    if (!std::filesystem::exists(file_name))
-        throw string("add_command->save_to_file: Error in locating file");
-
-    std::ofstream file(file_name); // makes file
-    file << hash_content;
 }
 
 
