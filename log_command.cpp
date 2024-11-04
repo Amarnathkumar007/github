@@ -11,7 +11,7 @@ using namespace std;
 void log_operation()
 {
     string log_history_content = file_to_string(".init/LOG");
-    cout << "\ndebug: " << log_history_content << endl;
+    // cout << "\ndebug: " << log_history_content << endl;
     vector<string> log_history_vector;
 
     if (log_history_content.size() < 40)
@@ -35,7 +35,7 @@ void log_operation()
         }
     }
 
-    cout << "debug: " << log_history_vector.size() << endl;
+    // cout << "debug: " << log_history_vector.size() << endl;
 
     for (auto i : log_history_vector)
     {
@@ -56,8 +56,7 @@ void log_operation()
             pos = content.find("/0", pre);
         }
         message.push_back(content.substr(pre, content.size() - pre));
-        cout << "Commit SHA: " + message[0] + "\nParent SHA: " + message[1] + "\nCommit Message: " + message[2] + "\nDate and Time: " + message[3] + "\nCommiter Info: " + message[4] + "\n"
-             << endl;
+        cout << "Commit SHA: " + message[0] + "\nParent SHA: " + message[1] + "\nCommit Message: " + message[2] + "\nDate and Time: " + message[3] + "\nCommiter Info: " + message[4] + "\n"<< endl;
     }
 }
 

@@ -1,4 +1,5 @@
 #ifndef INIT
+
 #define INIT
 
 #include <bits/stdc++.h>
@@ -22,9 +23,9 @@ bool init()
         return false;
     else
     {
-        std::ofstream index_file(".init/index.txt"); // makes file
-        std::ofstream head_file(".init/HEAD");       // makes head file
-        std::ofstream log_file(".init/LOG");         // makes log file
+        std::ofstream index_file(".init/INDEX"); // makes file
+        std::ofstream head_file(".init/HEAD");   // makes head file
+        std::ofstream log_file(".init/LOG");     // makes log file
 
         // closing all files
         index_file.close();

@@ -15,7 +15,7 @@ using namespace std;
  */
 void save_to_index(string hash)
 {
-    string file_name = ".init/index.txt";
+    string file_name = ".init/INDEX";
 
     if (!std::filesystem::exists(file_name))
         throw string("add_command->save_to_index: Error in locating file");
@@ -31,15 +31,14 @@ void save_to_index(string hash)
  */
 bool check_if_hash_exist()
 {
-    string file_name = ".init/index.txt";
+    string file_name = ".init/INDEX";
     string content = file_to_string(file_name);
     if (content.size() < 40)
         return false;
 
-    cout << "status is true";
+    // cout << "status is true";
     return true;
 }
-
 
 /**
  * @brief This function generates line to add into tree object
@@ -65,7 +64,7 @@ string get_tree_object_line(string file_name)
 
 void save_file_to_tree_when_empty(string file_name, string current_path)
 {
-    cout << "debug: Inside save_file_to_tree_when_emtpy" << endl;
+    // cout << "debug: Inside save_file_to_tree_when_emtpy" << endl;
     // make blob object and save to file
     string tree_content = get_tree_object_line(file_name);
 
@@ -78,7 +77,6 @@ void save_file_to_tree_when_empty(string file_name, string current_path)
     write_tree_object(hash_tree_content, tree_content);
 }
 
-
 /**
  * @brief here we get file name and save canged tabel hash to index file
  *
@@ -87,7 +85,7 @@ void save_file_to_tree_when_empty(string file_name, string current_path)
 void save_file_to_tree_when_not_empty(string file_name, string current_path)
 {
     // take hash of table from index file
-    string hash_table_hash = file_to_string(".init/index.txt");
+    string hash_table_hash = file_to_string(".init/INDEX");
     // cout << "debug: " << hash_table << endl;
 
     // cout << "debug: " << hash_table_hash << endl;
@@ -97,7 +95,7 @@ void save_file_to_tree_when_not_empty(string file_name, string current_path)
     // cout << "\ndebug: hash table path -> " << hash_table_path << endl;
     // get hash
     string hash_content = file_to_string(hash_table_path);
-    cout << "\ndebug: " << hash_content << endl;
+    // cout << "\ndebug: " << hash_content << endl;
     // check if file exist in hash
     string line_to_add = get_tree_object_line(file_name);
     if (hash_content.find(file_name) != string::npos)

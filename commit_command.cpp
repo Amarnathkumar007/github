@@ -31,13 +31,13 @@ void update_log_file(string hash)
     // if not then
 }
 
-void commit_operation(string commit_message)
+string commit_operation(string commit_message)
 {
-    string index_file_path = ".init/index.txt";
+    string index_file_path = ".init/INDEX";
     string index_file_content = file_to_string(index_file_path); // hash of add object
     // clean_index_file();
     save_to_index(""); // cleans index file
-    cout << "debug HERE" << endl;
+    // cout << "debug HERE" << endl;
     update_log_file(index_file_content); // update log
 
     // store meta data
@@ -60,16 +60,16 @@ void commit_operation(string commit_message)
     //<commit hash>/0<parent_hash>/0<commit_message>/0<Time stamp>/0<commiter info>
     string time_stamp = "";
     time_stamp = get_time_stamp();
-    cout << "debug: current data and time " << time_stamp << endl; // debug
+    // cout << "debug: current data and time " << time_stamp << endl; // debug
 
     string parent_commit = "";
     parent_commit = file_to_string(".init/HEAD"); // get parent commit
     if (parent_commit.size() < 40)
         parent_commit = "NONE";
-    cout << "debug: parent commit " << parent_commit << endl;
+    // cout << "debug: parent commit " << parent_commit << endl;
 
     string commiter_info = get_current_user();
-    cout << "debug: current user" << commiter_info << endl;
+    // cout << "debug: current user" << commiter_info << endl;
 
     string meta_data_content = index_file_content      // hash of current commit
                                + "/0" + parent_commit  // hash of parent commit
@@ -81,6 +81,9 @@ void commit_operation(string commit_message)
 
     // change head
     write_to_file(".init/HEAD", index_file_content); // hash of current tree
+
+    string return_statement = "Hash: " + meta_data_content.substr(0, 40) + "\n";
+    return return_statement;
 }
 
 #endif

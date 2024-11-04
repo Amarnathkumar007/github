@@ -11,6 +11,7 @@
 #include "add_command.cpp"
 #include "commit_command.cpp"
 #include "log_command.cpp"
+#include "checkout_command.cpp"
 
 using namespace std;
 
@@ -42,7 +43,7 @@ void make_map(string &filename, unordered_map<int, int> &u_m)
 
 void save_tree_map(string &filename, unordered_map<int, int> &u_m)
 {
-    ofstream file_obj("treeobj.txt");
+    ofstream file_obj(".init/TREEOBJ");
 
     // Write to the file
     // MyFile << "Files can be tricky, but it is fun enough!";
@@ -77,11 +78,11 @@ void menu(int argc, char const *argv[])
 
     if (argc >= 2) //./main <arg1>
     {
-        cout << "Reading input" << endl;
+        cout << "Reading Arguments..." << endl;
 
         if (strcmp(argv[1], "init") == 0)
         {
-            cout << "init" << endl;
+            cout << "init command executing ..." << endl;
             if (!init())
             {
                 throw string("problem in makeing file");
@@ -90,30 +91,31 @@ void menu(int argc, char const *argv[])
         }
         else if (strcmp(argv[1], "hash-object") == 0)
         {
-            cout << "hash_object" << endl;
+            cout << "hash_object command executing ..." << endl;
             // check argc size whether flag or not
             string hash;
             if (argc == 3) // flag not included
             {
-                cout << "flag not included" << endl;
+                // cout << "flag not included" << endl;
                 hash = hash_string(file_to_string(argv[2]));
+                cout << "Hash: " << hash << endl;
                 return;
             }
             else // flag includes
             {
-                cout << "flag included" << endl;
+                // cout << "flag included" << endl;
                 hash = hash_string(file_to_string(argv[3]));
             }
             cout << hash << endl;
             // process file
-            cout << "processing flag" << endl;
+            // cout << "processing flag" << endl;
             // save to hash along with compressed version of file
 
             save_blob_object(hash, argv[3]); // sending hash and file name
         }
         else if (strcmp(argv[1], "cat-file") == 0)
         {
-            cout << "cat-file" << endl;
+            cout << "cat-file executing ..." << endl;
             if (argc != 4)
             {
                 // flag not
@@ -121,19 +123,19 @@ void menu(int argc, char const *argv[])
                 // cout << "flag not included";
                 // return;
             }
-            cout << "cat-file operation" << endl;
+            // cout << "cat-file operation " << endl;
 
             if (strcmp(argv[2], "-p") == 0)
             {
-                cout << "-p flag" << endl;
+                // cout << "-p flag" << endl;
                 // string hash = argv[3];
                 string content = file_to_string(get_path_from_hash(argv[3])); // sending hash
                 cout << "Here is content:\n"
-                     << content << endl;
+                     << decompressString(content) << endl;
             }
             else if (strcmp(argv[2], "-s") == 0)
             {
-                cout << "file size in byte" << endl;
+                // cout << "file size in byte" << endl;
                 string content = content_type(argv[3]);
                 // if blob object
                 if (strcmp(content.c_str(), "blob") == 0)
@@ -142,7 +144,7 @@ void menu(int argc, char const *argv[])
                     //  uncompress it return the size of string
                     string blob_content = file_to_string(get_path_from_hash(argv[3]));
                     // uncompress it
-                    cout << "content of file: " << blob_content << endl;
+                    // cout << "content of file: " << blob_content << endl;
                     cout << "file size: " << decompressString(blob_content).size();
                 }
                 // if tree object
@@ -164,17 +166,17 @@ void menu(int argc, char const *argv[])
         {
             if (argc != 2)
             {
-                cout << "Main: wrong number of argument";
+                cout << "Main: wrong number of argument\b";
                 return;
             }
-            cout << "Main: write-tree operation";
+            cout << "Executing write-tree operation ...\n";
 
             vector<pair<string, pair<int, int>>> v_files; // file name and level and size
-            cout << "Main: print content of file";
+            // cout << "Main: print content of file";
 
             char current_path[buffer_size];
             getcwd(current_path, buffer_size);
-            cout << "path " << current_path << endl;
+            // cout << "path " << current_path << endl;
             create_tree_vector(current_path, 0, v_files); // get details of all files
 
             // make string to write in tee object
@@ -202,7 +204,7 @@ void menu(int argc, char const *argv[])
             tree_object_hash = hash_string(content); // hash of content
             // writing tree object
             write_tree_object(tree_object_hash, content); // file name,hash,level,size_of_file
-            cout << tree_object_hash << endl;
+            cout << "Hash: " << tree_object_hash << endl;
         }
         else if (strcmp(argv[1], "ls-tree") == 0)
         {
@@ -234,19 +236,19 @@ void menu(int argc, char const *argv[])
 
             // add to index folder
 
-            cout << "add operation\n";
+            cout << "add operation executing ...\n";
             if (argc == 2)
                 throw string("wrong parameters");
 
             if (strcmp(argv[2], ".") == 0)
             {
-                cout << ". operation\n";
+                // cout << ". operation\n";
 
                 vector<pair<string, pair<int, int>>> v_files; // file name and level and size
 
                 char current_path[buffer_size];
                 getcwd(current_path, buffer_size);
-                cout << "path " << current_path << endl;
+                // cout << "path " << current_path << endl;
                 create_tree_vector(current_path, 0, v_files); // get details of all files
 
                 // make string to write in tee object
@@ -283,7 +285,7 @@ void menu(int argc, char const *argv[])
             }
             else
             {
-                cout << "include these files" << endl;
+                cout << "Include these files ..." << endl;
                 bool status = true;
                 if (!check_if_hash_exist())
                     status = false;
@@ -306,26 +308,26 @@ void menu(int argc, char const *argv[])
         }
         else if (strcmp(argv[1], "commit") == 0)
         {
-            cout << "commit operation\n";
+            cout << "commit operation executing ...\n";
 
             string commit_message = "None"; // defualt message
             if (argc == 4)
-            {
-                cout << "commit with message" << endl;
                 commit_message = argv[3];
-            }
 
-            commit_operation(commit_message);
+            cout << commit_operation(commit_message); // printing hash
         }
         else if (strcmp(argv[1], "log") == 0)
         {
-            cout << "log operation";
+            cout << "Executing log operation ...";
             log_operation();
         }
         else if (strcmp(argv[1], "checkout") == 0)
         {
-            cout << "checkout" << endl;
-            
+            cout << "Executing checkout operation ..." << endl;
+            char current_path[buffer_size];
+            getcwd(current_path, buffer_size);
+
+            checkout(current_path, argv[2]);
         }
         else
         {
@@ -345,7 +347,7 @@ int main(int argc, char const *argv[])
         menu(argc, argv); // rediect based on input
 
         unordered_map<int, int> u_m;
-        string file_name = "treeobj.txt";
+        string file_name = ".init/TREEOBJ";
 
         make_map(file_name, u_m);
 
